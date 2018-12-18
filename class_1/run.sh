@@ -1,13 +1,14 @@
 #!/bin/sh
 
-cmds="multi_threads_go multi_threads_c multi_threads.py"
+langs="go c py java"
 
-for c in $cmds
+for l in $langs
 do
-	./$c > "$c.log" &
-	sleep 1
-	wc -l "$c.log"
-	ps aux|grep "$c" | grep -v "grep"|awk '{print $5"  "$6"   "$11}'
-	pkill multi_threads
-	rm "$c.log"
+	cmd="./multi_threads_${l}"
+	$cmd > "$cmd.log" &
+	sleep 3
+	wc -l "$cmd.log"
+	ps aux|grep "multi_threads" | grep -v "grep" | grep -v "bin/sh" |grep -v "vim" |awk '{print $5"  "$6"   "$11}'
+	ps aux|grep "multi_threads" | grep -v "grep" | grep -v "bin/sh" |grep -v "vim" |awk '{print $2}'|xargs kill
+	rm "$cmd.log"
 done
